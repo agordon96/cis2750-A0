@@ -1,15 +1,15 @@
 #include "LinkedListAPI.h"
 
 List initializeList(char *(*printFunction)(void *toBePrinted), void (*deleteFunction)(void *toBeDeleted), int (*compareFunction)(const void *first, const void *second)) {
-  List *list = (List*)malloc(sizeof(List));
+  List list;
 
-  list->deleteData = deleteFunction;
-  list->compare = compareFunction;
-  list->printData = printFunction;
-  list->head = NULL;
-  list->tail = NULL;
+  list.deleteData = deleteFunction;
+  list.compare = compareFunction;
+  list.printData = printFunction;
+  list.head = NULL;
+  list.tail = NULL;
 
-  return *list;
+  return list;
 }
 
 Node *initializeNode(void *data) {
@@ -68,7 +68,7 @@ void insertBack(List *list, void *toBeAdded) {
 
 void clearList(List *list) {
   Node *curr;
-  Node *toFree;
+  Node *next;
 
   if(!list) {
     printf("No list to clear.");
@@ -77,10 +77,10 @@ void clearList(List *list) {
 
   curr = list->head;
   while(curr) {
+    next = curr->next;
     list->deleteData(curr->data);
-    toFree = curr;
-    free(toFree);
-    curr = curr->next;
+    free(curr);
+    curr = next;
   }
 }
 
@@ -170,34 +170,28 @@ void *deleteDataFromList(List *list, void *toBeDeleted) {
   return toBeDeleted;
 }
 
-void *getFromFront(List *list) {
-  if(!list) {
-    printf("List does not exist.");
-    return NULL;
-  } else if(!list->head) {
+void *getFromFront(List list) {
+  if(!list.head) {
     printf("No nodes for list.");
     return NULL;
-  } else if(!list->head->data) {
+  } else if(!list.head->data) {
     printf("No data for the head node.");
     return NULL;
   }
 
-  return list->head->data;
+  return list.head->data;
 }
 
-void *getFromBack(List *list) {
-  if(!list) {
-    printf("List does not exist.");
-    return NULL;
-  } else if(!list->tail) {
+void *getFromBack(List list) {
+  if(!list.tail) {
     printf("No nodes for list.");
     return NULL;
-  } else if(!list->tail->data) {
+  } else if(!list.tail->data) {
     printf("No data for the tail node.");
     return NULL;
   }
 
-  return list->tail->data;
+  return list.tail->data;
 }
 
 char *toString(List list) {
@@ -218,24 +212,21 @@ char *toString(List list) {
     }
 
     list.head = list.head->next;
-  }
-
-  if(!str) {
-    str = "";
+    free(tempStr);
   }
 
   return str;
 }
 
 ListIterator createIterator(List list) {
-  ListIterator *iter = (ListIterator*)malloc(sizeof(ListIterator));;
+  ListIterator iter;
 
   if(!list.head) {
     printf("List is invalid.");
   }
 
-  iter->current = list.head;
-  return *iter;
+  iter.current = list.head;
+  return iter;
 }
 
 void *nextElement(ListIterator *iter) {
