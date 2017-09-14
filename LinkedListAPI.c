@@ -1,3 +1,11 @@
+/* CIS2750 F2017
+ * Assignment 0
+ * Aaron Gordon 0884023
+ * This file contains the implementation of the Linked List API
+ * This implementation is done completely from scratch (besides fetching function definitions from the given header file) since I
+ * took 2520 in a different year (upper year student).
+ */
+
 #include "LinkedListAPI.h"
 
 List initializeList(char *(*printFunction)(void *toBePrinted), void (*deleteFunction)(void *toBeDeleted), int (*compareFunction)(const void *first, const void *second)) {
